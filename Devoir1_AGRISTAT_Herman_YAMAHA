@@ -1,0 +1,381 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "61e6500c-2872-4d52-b84e-54f87d944481",
+   "metadata": {},
+   "source": [
+    "## Devoir 1 de Statistique Agricole"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6503ae75-8214-4cf9-9165-f6c692606e52",
+   "metadata": {},
+   "source": [
+    "## Réalisé par Herman YAMAHA"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "9b320d15-19aa-4d55-889f-99903b24a3e3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Importation des bibliothèques nécessaires\n",
+    "import os\n",
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "16b8a873-fb25-43ef-8f98-68b5924a2f5c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Spécification du répertoire de travail \n",
+    "os.chdir(\"C:/Users/Upclass Telco/Desktop/ENSAE/ISEP 2/S2/Statistique agricole/Devoir 1\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "id": "c3b24c8c-1e67-4201-a260-7e5b1a65f041",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "     HH_ID  hhsex  hhsize  hhage  area_maize  prod_maize  village\n",
+      "0        1      2      12     81        4.46      1831.1       13\n",
+      "1        2      1      31     88        2.03      1248.3       48\n",
+      "2        3      2      27     28        0.43      1006.5       60\n",
+      "3        4      1      13     75        2.94      2191.9       17\n",
+      "4        5      1      22     64        1.92      1678.1       15\n",
+      "..     ...    ...     ...    ...         ...         ...      ...\n",
+      "995    996      2      21     87        4.21      1381.9       60\n",
+      "996    997      1      20     37        1.23      1289.3       29\n",
+      "997    998      1       6     78        4.09      1445.8       17\n",
+      "998    999      1      21     30        0.54      1201.7       18\n",
+      "999   1000      2       6     42        2.25      1409.3       48\n",
+      "\n",
+      "[1000 rows x 7 columns]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Importation la base de données `household_data.csv`.\n",
+    "df = pd.read_csv(\"household_data.csv\")\n",
+    "print (df)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4d2adabe-f918-4a33-8056-2335a9cec486",
+   "metadata": {},
+   "source": [
+    "### Préparation des données"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "id": "031ee5c1-bf29-4923-9c6f-3d4cf8df0637",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Le nombre d'observations est de 1000 et le nombre de variables est de 7\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Affichage le nombre d'observations et de variables.\n",
+    "print ( \"Le nombre d'observations est de\", len(df), \"et le nombre de variables est de\", len(df.columns))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bec77cff-f8a0-418e-a4bc-e9908e62cd4d",
+   "metadata": {},
+   "source": [
+    "### Calculs et analyses"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "id": "5f1d6b83-17cf-4b9b-8782-fb1a3b4d19c4",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "    village  Superficie_Moyenne\n",
+      "0         1            2.954706\n",
+      "1         2            3.111176\n",
+      "2         3            3.060833\n",
+      "3         4            2.653750\n",
+      "4         5            2.118824\n",
+      "..      ...                 ...\n",
+      "62       63            2.472727\n",
+      "63       64            2.901000\n",
+      "64       65            2.613571\n",
+      "65       66            2.870769\n",
+      "66       67            2.782500\n",
+      "\n",
+      "[67 rows x 2 columns]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Calcul de la superficie moyenne par ménage par village\n",
+    "superficie_moyenne = df.groupby(\"village\")[\"area_maize\"].mean().reset_index()\n",
+    "\n",
+    "# Renommer la colonne pour plus de clarté\n",
+    "superficie_moyenne.columns = [\"village\", \"Superficie_Moyenne\"]\n",
+    "\n",
+    "print(superficie_moyenne)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "id": "2a260c9d-919e-48ec-b7b2-30f5bcf67c8f",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Le rendement moyen global est de : 907.70 kg/ha\n",
+      "hhsex\n",
+      "1    961.60749\n",
+      "2    853.78831\n",
+      "Name: yield_maize, dtype: float64\n",
+      "Corrélation entre âge et rendement du maïs : -0.0041\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Calcul du rendement moyen global\n",
+    "df[\"yield_maize\"] = df[\"prod_maize\"] / df[\"area_maize\"]\n",
+    "rendement_moyen = df[\"yield_maize\"].mean()\n",
+    "print(f\"Le rendement moyen global est de : {rendement_moyen:.2f} kg/ha\")\n",
+    "\n",
+    "# Comparaison par sexe\n",
+    "rendement_par_sexe = df.groupby(\"hhsex\")[\"yield_maize\"].mean()\n",
+    "\n",
+    "print(rendement_par_sexe)\n",
+    "\n",
+    "# Corrélation âge-rendement\n",
+    "correlation_age_rendement = df[\"hhage\"].corr(df[\"yield_maize\"])\n",
+    "print(f\"Corrélation entre âge et rendement du maïs : {correlation_age_rendement:.4f}\")\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 74,
+   "id": "b3325dca-c78c-4013-bbbe-460eb365ac8f",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "    village  hhsize  prod_maize  area_maize\n",
+      "0         1     335     25077.5       50.23\n",
+      "1         2     392     24905.9       52.89\n",
+      "2         3     260     19426.8       36.73\n",
+      "3         4     116     12094.8       21.23\n",
+      "4         5     322     27263.1       36.02\n",
+      "..      ...     ...         ...         ...\n",
+      "62       63     190     15919.4       27.20\n",
+      "63       64     401     28756.4       58.02\n",
+      "64       65     352     19772.2       36.59\n",
+      "65       66     261     19854.4       37.32\n",
+      "66       67     216     20007.4       33.39\n",
+      "\n",
+      "[67 rows x 4 columns]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Aggrégation de la base au niveau village, de sorte à avoir le même format que la base kawteef.xlsx\n",
+    "df_agg = df.groupby(\"village\").agg({\n",
+    "    \"hhsize\": \"sum\",\n",
+    "    \"prod_maize\": \"sum\",\n",
+    "    \"area_maize\": \"sum\", \n",
+    "}).reset_index()\n",
+    "\n",
+    "print(df_agg)  # Vérification du format"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "id": "dab4b4d5-e2f9-43c3-9648-cd889e57aedf",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Superficie totale emblavée dans la Zone A : 208.20 ha\n"
+     ]
+    }
+   ],
+   "source": [
+    "# La superficie totale emblavée dans la Zone A (villages : 2, 7, 13, 47, 38)\n",
+    "zone_A_villages = [2, 7, 13, 47, 38]\n",
+    "superficie_zone_A = df[df[\"village\"].isin(zone_A_villages)][\"area_maize\"].sum()\n",
+    "print(f\"Superficie totale emblavée dans la Zone A : {superficie_zone_A:.2f} ha\")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "id": "624505ef-b594-4926-904f-e080221c0ebd",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Production totale dans la Zone A : 125803.20 kg\n"
+     ]
+    }
+   ],
+   "source": [
+    "# La production totale dans la Zone A\n",
+    "production_zone_A = df[df[\"village\"].isin(zone_A_villages)][\"prod_maize\"].sum()\n",
+    "print(f\"Production totale dans la Zone A : {production_zone_A:.2f} kg\")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "id": "e20234c1-4134-4591-8fcb-5feddfa4aa4e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "village\n",
+      "1      672.434465\n",
+      "2      545.260538\n",
+      "3      883.295332\n",
+      "4      705.778578\n",
+      "5     1099.315361\n",
+      "         ...     \n",
+      "63    1108.516384\n",
+      "64     866.569239\n",
+      "65    1059.032940\n",
+      "66     805.464802\n",
+      "67    1136.801042\n",
+      "Name: yield_maize, Length: 67, dtype: float64\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Le rendement moyen du maïs dans chaque zone\n",
+    "rendement_par_village = df.groupby(\"village\")[\"yield_maize\"].mean()\n",
+    "print(rendement_par_village)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "id": "86eb23e7-65a5-4c3c-bb1c-94848d2ab1bf",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "     village  yield_maize  Subvention\n",
+      "0         13   410.560538        True\n",
+      "1         48   614.926108       False\n",
+      "2         60  2340.697674       False\n",
+      "3         17   745.544218       False\n",
+      "4         15   874.010417       False\n",
+      "..       ...          ...         ...\n",
+      "995       60   328.242280        True\n",
+      "996       29  1048.211382       False\n",
+      "997       17   353.496333        True\n",
+      "998       18  2225.370370       False\n",
+      "999       48   626.355556       False\n",
+      "\n",
+      "[1000 rows x 3 columns]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Création d'une variable `Subvention` pour indiquer si un village a un rendement de moins de 500kg/ha.\n",
+    "df[\"Subvention\"] = df[\"yield_maize\"] < 500\n",
+    "print(df[[\"village\", \"yield_maize\", \"Subvention\"]])\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 66,
+   "id": "0a9882aa-6f43-4858-9690-9bbf731c5137",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Villages avec superficie moyenne par ménage inférieure à 1 ha et exportation sur csv\n",
+    "df = pd.read_csv(\"household_data.csv\")\n",
+    "pauvres_villages = df.groupby('village')['area_maize'].mean()\n",
+    "pauvres_villages = pauvres_villages[pauvres_villages < 1]\n",
+    "pauvres_villages.to_csv(\"pauvres_villages.csv\", index=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 73,
+   "id": "34c174bf-12da-4b86-9859-815b39cc7788",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Calcul de la taille moyenne par zone et exportation sur word et excel\n",
+    "taille_moyenne_par_village = df.groupby(\"village\")[\"hhsize\"].mean().reset_index()\n",
+    "\n",
+    "# Exporter en Excel et Word\n",
+    "taille_moyenne_par_village.to_excel(\"taille_moyenne_par_village.xlsx\", index=False)\n",
+    "\n",
+    "# Exporter en Word (formaté comme un tableau Markdown)\n",
+    "with open(\"taille_moyenne_par_village.docx\", \"w\") as f:\n",
+    "    f.write(taille_moyenne_par_village.to_markdown(index=False))"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.4"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
